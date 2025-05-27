@@ -1,0 +1,36 @@
+
+
+void Write_i2c(int adressa_i2c_slave ,int adressa_register, int data) {
+  Wire.beginTransmission(adressa_i2c_slave);  // transmit to device #8
+  Wire.write(adressa_register);
+  Wire.write(data);
+  Wire.endTransmission();
+}
+
+int fun(int adressa_register1, int adressa_register2) {
+  short int number1, number2;
+
+  number1 = Read_i2c(I2C_MPU6050_ADDR,adressa_register1);
+
+  number1 = number1 << 8;
+
+  number2 = Read_i2c(I2C_MPU6050_ADDR,adressa_register2);
+
+  number1 = number1 + number2;
+
+  return number1;
+}
+
+short int Read_i2c(int adressa_i2c_slave ,int adressa_register) {
+  byte number;
+  Wire.beginTransmission(adressa_i2c_slave);  // transmit to device #8
+  Wire.write(adressa_register);
+  Wire.endTransmission();
+
+
+  Wire.requestFrom(adressa_i2c_slave, 1);  // Request 6 bytes from slave
+  // Slave may send less than requested
+  while (Wire.available()) number = Wire.read();  // Receive a byte as character
+
+  return number;
+}
